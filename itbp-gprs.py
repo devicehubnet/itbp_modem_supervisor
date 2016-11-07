@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import sys
 import RPi.GPIO as GPIO
 from time import sleep
 
@@ -77,6 +78,28 @@ def modem_supervisord():
         sleep(1)
 
 if __name__ == "__main__":
-    modem_hw_control_setup()
-    modem_power_on()
-    modem_supervisord()
+    if len(sys.argv):
+        cmd = sys.argv[0]
+        if cmd == "start":
+            modem_hw_control_setup()
+            modem_power_on()
+            modem_supervisord()
+        elif cmd == "stop":
+            modem_hw_control_setup()
+            modem_power_off()
+            modem_hw_control_release()
+            exit(0)
+        elif cmd == "poweron":
+            modem_hw_control_setup()
+            modem_power_on()
+            modem_hw_control_release()
+        elif cmd == "poweroff":
+            modem_hw_control_setup()
+            modem_power_off()
+            modem_hw_control_release()
+        elif cmd == "powercycle":
+            modem_hw_control_setup()
+            modem_restart()
+            modem_hw_control_release()
+        else:
+            print "Unknown command"
