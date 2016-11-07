@@ -15,32 +15,32 @@ def modem_status():
 
 def modem_power_on():
     if not modem_status():
-        print("try to wake h-nanoGSM")
+        print("itbp modem: try to wake h-nanoGSM")
         GPIO.output(POWER, GPIO.LOW)
         sleep(1)
         GPIO.output(POWER, GPIO.HIGH)
     sleep(5)
     # if GPIO.input(STATUS):
     if modem_status():
-        print("h-nanoGSM is up")
+        print("itbp modem: h-nanoGSM is up")
     else:
-        print("failure powering h-nanoGSM")
+        print("itbp modem: failure powering on h-nanoGSM")
         exit(100)
 
 
 def modem_power_off():
     # if GPIO.input(STATUS):
     if modem_status():
-        print("try to shutdown h-nanoGSM")
+        print("itbp modem: try to shutdown h-nanoGSM")
         GPIO.output(POWER, GPIO.LOW)
         sleep(1)
         GPIO.output(POWER, GPIO.HIGH)
     sleep(8)
     # if not GPIO.input(STATUS):
     if not modem_status():
-        print("h-nanoGSM is down")
+        print("itbp modem: h-nanoGSM is down")
     else:
-        print("failure powering off h-nanoGSM")
+        print("itbp modem: failure powering off h-nanoGSM")
         exit(100)
 
 
@@ -72,6 +72,8 @@ def modem_hw_control_release():
 
 def modem_supervisord():
     while True:
+        # do we have ppp up?
+
         sleep(1)
 
 if __name__ == "__main__":
