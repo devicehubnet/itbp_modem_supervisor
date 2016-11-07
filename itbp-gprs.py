@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-
 import os
 import RPi.GPIO as GPIO
 from time import sleep
 
 
-POWER = 16
-RESET = 18  # DON'T NEEDED!!! ==> RESET PIN IT IS NC...cross compatibility with c-uGSM, d-u3G...
+POWER  = 16
+RESET  = 18  # DON'T NEEDED!!! ==> RESET PIN IT IS NC...cross compatibility with c-uGSM, d-u3G...
 STATUS = 12
 
 
