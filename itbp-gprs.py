@@ -79,7 +79,7 @@ def modem_supervisord():
 
 if __name__ == "__main__":
     if len(sys.argv):
-        cmd = sys.argv[0]
+        cmd = sys.argv[1]
         if cmd == "start":
             modem_hw_control_setup()
             modem_power_on()
@@ -102,4 +102,4 @@ if __name__ == "__main__":
             modem_restart()
             modem_hw_control_release()
         else:
-            print "Unknown command"
+            print "itbp modem: Unknown command"
