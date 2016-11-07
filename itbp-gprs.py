@@ -49,9 +49,6 @@ def modem_restart():
     sleep(3)
     modem_power_on()
 
-    def getModemState():
-        return GPIO.input(STATUS)
-
 
 def modem_hw_control_setup():
     GPIO.setmode(GPIO.BOARD)
@@ -79,4 +76,5 @@ def modem_supervisord():
 
 if __name__ == "__main__":
     modem_hw_control_setup()
+    modem_power_on()
     modem_supervisord()
