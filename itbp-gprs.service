@@ -1,0 +1,17 @@
+[Unit]
+Description=itbrainpower.net modem supervisor script
+After=syslog.target
+
+[Service]
+Type=simple
+User=root
+Group=dialout
+ExecStart=/etc/init.d/iptb-gprs start
+
+# Give a reasonable amount of time for the server to start up/shut down
+TimeoutSec=3000
+
+[Install]
+WantedBy=network.target
+
+
