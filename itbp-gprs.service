@@ -5,8 +5,8 @@ After=syslog.target
 [Service]
 Type=simple
 User=root
-Group=dialout
-ExecStart=/usr/local/bin/iptb-gprs start
+Group=root
+ExecStart=/usr/local/bin/itbp-gprs start
 ExecStop=/usr/local/bin/itbp-gprs stop
 
 # Give a reasonable amount of time for the server to start up/shut down
