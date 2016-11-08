@@ -83,8 +83,11 @@ if __name__ == "__main__":
         if cmd == "start":
             modem_hw_control_setup()
             modem_power_on()
+            sleep(5)
+            os.system("pon gprs")
             modem_supervisord()
         elif cmd == "stop":
+            os.system("poff gprs")
             modem_hw_control_setup()
             modem_power_off()
             modem_hw_control_release()
