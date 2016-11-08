@@ -13,6 +13,5 @@ ExecStop=/usr/local/bin/itbp-gprs stop
 TimeoutSec=3000
 
 [Install]
-WantedBy=network.target
-
+WantedBy=multi-user.target
 
