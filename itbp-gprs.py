@@ -16,19 +16,23 @@ class ITBPSupervisord(object):
     APN = 'internet'
     ISP = 'isp'
 
+    AUTO_CONNECT = False
+
     def __init__(self):
         # Try to open the config file /etc/itbp-gprs.ini and populate settings
         try:
             config = ConfigParser.ConfigParser()
             config.read(self.INI_FILE)
 
-            self.PIN_POWER  = config.get('Modem', 'gpio_power')
-            self.PIN_RESET  = config.get('Modem', 'gpio_reset')
-            self.PIN_STATUS = config.get('Modem', 'gpio_status')
+            self.PIN_POWER  = config.getint('Modem', 'gpio_power')
+            self.PIN_RESET  = config.getint('Modem', 'gpio_reset')
+            self.PIN_STATUS = config.getint('Modem', 'gpio_status')
 
             self.APN = config.get('Connection', 'apn')
             self.ISP = config.get('Connection', 'isp')
-            self.log("ISP:" + self.ISP + " APN: " + self.APN)
+            self.AUTO_CONNECT = config.getboolean('Connection', 'auto_connect')
+
+            self.log("ISP: " + self.ISP + " APN: " + self.APN + " AUTO_CONNECT: " + self.AUTO_CONNECT)
         except Exception as e:
             self.log("config file init EXC: " + str(e))
 
