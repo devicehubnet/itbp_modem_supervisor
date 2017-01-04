@@ -18,6 +18,9 @@ class ITBPSupervisord(object):
 
     AUTO_CONNECT = False
 
+    PPP_CONNECTED = False
+    NET_CONNECTED = False
+
     def __init__(self):
         # Try to open the config file /etc/itbp-gprs.ini and populate settings
         try:
@@ -103,7 +106,14 @@ class ITBPSupervisord(object):
         os.system("poff {ISP}".format(ISP=self.ISP))
 
     def ppp_status(self):
-        return True
+        try:
+            for line in os.popen("/sbin/ip link show "):
+                if 'ppp' in line:
+                    return True
+        except Exception as e:
+            self.log(e)
+
+        return False
 
     def net_status(self):
         return True
