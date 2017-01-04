@@ -32,7 +32,7 @@ class ITBPSupervisord(object):
             self.ISP = config.get('Connection', 'isp')
             self.AUTO_CONNECT = config.getboolean('Connection', 'auto_connect')
 
-            self.log("ISP: " + self.ISP + " APN: " + self.APN + " AUTO_CONNECT: " + self.AUTO_CONNECT)
+            self.log("ISP: " + self.ISP + " APN: " + self.APN + " AUTO_CONNECT: " + str(self.AUTO_CONNECT))
         except Exception as e:
             self.log("config file init EXC: " + str(e))
 
