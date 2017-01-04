@@ -3,106 +3,120 @@ import os
 import sys
 import RPi.GPIO as GPIO
 from time import sleep
+import ConfigParser
 
 
-POWER  = 16
-RESET  = 18  # DON'T NEEDED!!! ==> RESET PIN IT IS NC...cross compatibility with c-uGSM, d-u3G...
-STATUS = 12
+class ITBPSupervisord(object):
+    PIN_POWER = 16
+    PIN_RESET = 18
+    PIN_STATUS = 12
 
+    INI_FILE = '/etc/itbp-gprs.ini'
 
-def modem_status():
-    return GPIO.input(STATUS)
+    def __init__(self):
+        # Try to open the config file /etc/itbp-gprs.ini and populate settings
+        try:
+            config = ConfigParser.ConfigParser()
+            config.read(self.INI_FILE)
+        except Exception as e:
+            print "ITBPSupervisord config file init EXC:", e
 
+    def modem_status(self):
+        return GPIO.input(self.PIN_STATUS)
 
-def modem_power_on():
-    if not modem_status():
-        print("itbp modem: try to wake h-nanoGSM")
-        GPIO.output(POWER, GPIO.LOW)
-        sleep(1)
-        GPIO.output(POWER, GPIO.HIGH)
-    sleep(5)
-    # if GPIO.input(STATUS):
-    if modem_status():
-        print("itbp modem: h-nanoGSM is up")
-    else:
-        print("itbp modem: failure powering on h-nanoGSM")
-        exit(100)
+    def modem_power_on(self):
+        if not self.modem_status():
+            print("itbp modem: try to wake h-nanoGSM")
+            GPIO.output(self.PIN_POWER, GPIO.LOW)
+            sleep(1)
+            GPIO.output(self.PIN_POWER, GPIO.HIGH)
+        sleep(5)
 
+        if self.modem_status():
+            print("itbp modem: h-nanoGSM is up")
+        else:
+            print("itbp modem: failure powering on h-nanoGSM")
 
-def modem_power_off():
-    # if GPIO.input(STATUS):
-    if modem_status():
-        print("itbp modem: try to shutdown h-nanoGSM")
-        GPIO.output(POWER, GPIO.LOW)
-        sleep(1)
-        GPIO.output(POWER, GPIO.HIGH)
-    sleep(8)
-    # if not GPIO.input(STATUS):
-    if not modem_status():
-        print("itbp modem: h-nanoGSM is down")
-    else:
-        print("itbp modem: failure powering off h-nanoGSM")
-        exit(100)
+    def modem_power_off(self):
+        # if GPIO.input(STATUS):
+        if self.modem_status():
+            print("itbp modem: try to shutdown h-nanoGSM")
+            GPIO.output(self.PIN_POWER, GPIO.LOW)
+            sleep(1)
+            GPIO.output(self.PIN_POWER, GPIO.HIGH)
+        sleep(8)
 
+        if not self.modem_status():
+            print("itbp modem: h-nanoGSM is down")
+        else:
+            print("itbp modem: failure powering off h-nanoGSM")
 
-def modem_restart():
-    modem_power_off()
-    sleep(3)
-    modem_power_on()
+    def modem_restart(self):
+        self.modem_power_off()
+        sleep(3)
+        self.modem_power_on()
 
+    def modem_hw_control_setup(self):
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setwarnings(False)
+        try:
+            GPIO.setup(self.PIN_STATUS, GPIO.IN)
+            GPIO.setup(self.PIN_POWER, GPIO.OUT, initial=GPIO.HIGH)
+        except Exception as e:
+            print str(e)
+            GPIO.cleanup()  # free GPIO
+            GPIO.setup(self.PIN_STATUS, GPIO.IN)
+            GPIO.setup(self.PIN_POWER, GPIO.OUT, initial=GPIO.HIGH)
+        GPIO.setwarnings(True)
 
-def modem_hw_control_setup():
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setwarnings(False)
-    try:
-        GPIO.setup(STATUS, GPIO.IN)
-        GPIO.setup(POWER, GPIO.OUT, initial=GPIO.HIGH)
-    # GPIO.setup(RESET, GPIO.OUT, initial=GPIO.HIGH)#RESET PIN IT IS NC...cross compatibility with c-uGSM
-    except Exception as e:
-        print str(e)
+    def modem_hw_control_release(self):
         GPIO.cleanup()  # free GPIO
-        GPIO.setup(STATUS, GPIO.IN)
-        GPIO.setup(POWER, GPIO.OUT, initial=GPIO.HIGH)
-    # GPIO.setup(RESET, GPIO.OUT, initial=GPIO.HIGH)#RESET PIN IT IS NC...cross compatibility with c-uGSM
-    GPIO.setwarnings(True)
 
+    def ppp_connect(self):
+        pass
 
-def modem_hw_control_release():
-    GPIO.cleanup()  # free GPIO
+    def ppp_disconnect(self):
+        pass
 
+    def ppp_status(self):
+        pass
 
-def modem_supervisord():
-    while True:
-        # do we have ppp up?
+    def supervisord(self):
+        while True:
+            # do we have ppp up?
 
-        sleep(1)
+            sleep(1)
+
 
 if __name__ == "__main__":
+    itbp_supervisord = ITBPSupervisord()
+
     if len(sys.argv):
         cmd = sys.argv[1]
         if cmd == "start":
-            modem_hw_control_setup()
-            modem_power_on()
+            itbp_supervisord.modem_hw_control_setup()
+            itbp_supervisord.modem_power_on()
             sleep(5)
-            os.system("pon gprs")
-            modem_supervisord()
+            itbp_supervisord.ppp_connect()
+            itbp_supervisord.supervisord()
         elif cmd == "stop":
-            os.system("poff gprs")
-            modem_hw_control_setup()
-            modem_power_off()
-            modem_hw_control_release()
-            exit(0)
+            itbp_supervisord.ppp_disconnect()
+            itbp_supervisord.modem_hw_control_setup()
+            itbp_supervisord.modem_power_off()
+            itbp_supervisord.modem_hw_control_release()
         elif cmd == "poweron":
-            modem_hw_control_setup()
-            modem_power_on()
-            modem_hw_control_release()
+            itbp_supervisord.modem_hw_control_setup()
+            itbp_supervisord.modem_power_on()
+            itbp_supervisord.modem_hw_control_release()
         elif cmd == "poweroff":
-            modem_hw_control_setup()
-            modem_power_off()
-            modem_hw_control_release()
+            itbp_supervisord.modem_hw_control_setup()
+            itbp_supervisord.modem_power_off()
+            itbp_supervisord.modem_hw_control_release()
         elif cmd == "powercycle":
-            modem_hw_control_setup()
-            modem_restart()
-            modem_hw_control_release()
+            itbp_supervisord.modem_hw_control_setup()
+            itbp_supervisord.modem_restart()
+            itbp_supervisord.modem_hw_control_release()
         else:
             print "itbp modem: Unknown command"
+    else:
+        itbp_supervisord.supervisord()
