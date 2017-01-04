@@ -14,6 +14,7 @@ class ITBPSupervisord(object):
     INI_FILE = '/etc/itbp-gprs.ini'
 
     APN = 'internet'
+    ISP = 'isp'
 
     def __init__(self):
         # Try to open the config file /etc/itbp-gprs.ini and populate settings
@@ -26,9 +27,15 @@ class ITBPSupervisord(object):
             self.PIN_STATUS = config.get('Modem', 'gpio_status')
 
             self.APN = config.get('Connection', 'apn')
-            self.log("APN: " + self.APN)
+            self.ISP = config.get('Connection', 'isp')
+            self.log("ISP:" + self.ISP + " APN: " + self.APN)
         except Exception as e:
             self.log("config file init EXC: " + str(e))
+
+        self.modem_hw_control_setup()
+
+    def __del__(self):
+        self.modem_hw_control_release()
 
     def log(self, args):
         print "ITBPSupervisord:", args
@@ -50,7 +57,6 @@ class ITBPSupervisord(object):
             self.log("failure powering on h-nanoGSM")
 
     def modem_power_off(self):
-        # if GPIO.input(STATUS):
         if self.modem_status():
             print("itbp modem: try to shutdown h-nanoGSM")
             GPIO.output(self.PIN_POWER, GPIO.LOW)
@@ -107,28 +113,19 @@ if __name__ == "__main__":
     if len(sys.argv):
         cmd = sys.argv[1]
         if cmd == "start":
-            itbp_supervisord.modem_hw_control_setup()
             itbp_supervisord.modem_power_on()
             sleep(5)
             itbp_supervisord.ppp_connect()
             itbp_supervisord.supervisord()
         elif cmd == "stop":
             itbp_supervisord.ppp_disconnect()
-            itbp_supervisord.modem_hw_control_setup()
             itbp_supervisord.modem_power_off()
-            itbp_supervisord.modem_hw_control_release()
         elif cmd == "poweron":
-            itbp_supervisord.modem_hw_control_setup()
             itbp_supervisord.modem_power_on()
-            itbp_supervisord.modem_hw_control_release()
         elif cmd == "poweroff":
-            itbp_supervisord.modem_hw_control_setup()
             itbp_supervisord.modem_power_off()
-            itbp_supervisord.modem_hw_control_release()
         elif cmd == "powercycle":
-            itbp_supervisord.modem_hw_control_setup()
             itbp_supervisord.modem_restart()
-            itbp_supervisord.modem_hw_control_release()
         else:
             print "itbp modem: Unknown command"
     else:
