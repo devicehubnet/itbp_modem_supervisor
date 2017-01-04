@@ -21,8 +21,8 @@ class ITBPSupervisord(object):
         except Exception as e:
             print "ITBPSupervisord config file init EXC:", e
 
-    def log(self, *kwargs):
-        print "ITBPSupervisord:", kwargs
+    def log(self, args):
+        print "ITBPSupervisord:", args
 
     def modem_status(self):
         return GPIO.input(self.PIN_STATUS)
@@ -33,7 +33,7 @@ class ITBPSupervisord(object):
             GPIO.output(self.PIN_POWER, GPIO.LOW)
             sleep(1)
             GPIO.output(self.PIN_POWER, GPIO.HIGH)
-        sleep(5)
+            sleep(5)
 
         if self.modem_status():
             self.log("h-nanoGSM is up")
@@ -47,7 +47,7 @@ class ITBPSupervisord(object):
             GPIO.output(self.PIN_POWER, GPIO.LOW)
             sleep(1)
             GPIO.output(self.PIN_POWER, GPIO.HIGH)
-        sleep(8)
+            sleep(8)
 
         if not self.modem_status():
             print("itbp modem: h-nanoGSM is down")
