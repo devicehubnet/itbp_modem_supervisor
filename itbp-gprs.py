@@ -13,13 +13,22 @@ class ITBPSupervisord(object):
 
     INI_FILE = '/etc/itbp-gprs.ini'
 
+    APN = 'internet'
+
     def __init__(self):
         # Try to open the config file /etc/itbp-gprs.ini and populate settings
         try:
             config = ConfigParser.ConfigParser()
             config.read(self.INI_FILE)
+
+            self.PIN_POWER  = config.get('Modem', 'gpio_power')
+            self.PIN_RESET  = config.get('Modem', 'gpio_reset')
+            self.PIN_STATUS = config.get('Modem', 'gpio_status')
+
+            self.APN = config.get('Connection', 'apn')
+            self.log("APN: " + self.APN)
         except Exception as e:
-            print "ITBPSupervisord config file init EXC:", e
+            self.log("config file init EXC: " + str(e))
 
     def log(self, args):
         print "ITBPSupervisord:", args
@@ -85,6 +94,7 @@ class ITBPSupervisord(object):
         pass
 
     def supervisord(self):
+        self.log("Starting supervisor loop")
         while True:
             # do we have ppp up?
 
