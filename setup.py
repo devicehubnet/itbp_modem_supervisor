@@ -11,5 +11,6 @@ setup(name='ITBP Modem Supervisor',
       install_requires=['transitions', 'RPi.GPIO'],
       scritps=['itbp-gprs.py'],
       data_files=[('/etc/systemd/system', ['itbp-gprs.service']),
-                  ('/etc', ['itbp-gprs.ini'])],
+                  ('/etc', ['itbp-gprs.ini']),
+                  ('/usr/local/bin', ['itbp-gprs.py'])],
       )

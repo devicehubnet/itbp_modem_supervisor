@@ -6,8 +6,8 @@ After=syslog.target
 Type=simple
 User=root
 Group=root
-ExecStart=/usr/local/bin/itbp-gprs start
-ExecStop=/usr/local/bin/itbp-gprs stop
+ExecStart=/usr/local/bin/itbp-gprs.py start
+ExecStop=/usr/local/bin/itbp-gprs.py stop
 
 # Give a reasonable amount of time for the server to start up/shut down
 TimeoutSec=3000
