@@ -120,6 +120,7 @@ class ITBPSupervisord(object):
         p = Popen(["ping", "-c1", "devicehub.net"])
         output = p.communicate()[0]
         if p.returncode == 0:
+            self.log(output)
             return True
         else:
             return False
@@ -130,8 +131,16 @@ class ITBPSupervisord(object):
             # do we have ppp up?
             ppp_state = self.ppp_status()
             net_state = self.net_status()
-            print ppp_state, net_state
-            sleep(1)
+            print "PPP Status:", "UP" if ppp_state else "DOWN"
+            print "NET Status:", "UP" if net_state else "DOWN"
+            if net_state is False and ppp_state is False:
+                print "Attempting to start PPP connection..."
+                self.ppp_disconnect()
+                self.modem_power_off()
+                sleep(1)
+                self.modem_power_on()
+                self.ppp_connect()
+            sleep(5)
 
 
 if __name__ == "__main__":
