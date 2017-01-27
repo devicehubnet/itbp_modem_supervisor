@@ -4,6 +4,7 @@ import sys
 import RPi.GPIO as GPIO
 from time import sleep
 import ConfigParser
+from subprocess import Popen
 
 
 class ITBPSupervisord(object):
@@ -116,7 +117,9 @@ class ITBPSupervisord(object):
         return False
 
     def net_status(self):
-        return True
+        p = Popen(["ping", "-c1", "devicehub.net"])
+        output = p.communicate()[0]
+        print(p.returncode)
 
     def supervisord(self):
         self.log("Starting supervisor loop")
@@ -124,6 +127,7 @@ class ITBPSupervisord(object):
             # do we have ppp up?
             ppp_state = self.ppp_status()
             net_state = self.net_status()
+            print ppp_state, net_state
             sleep(1)
 
 
