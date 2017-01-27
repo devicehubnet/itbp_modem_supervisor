@@ -119,7 +119,10 @@ class ITBPSupervisord(object):
     def net_status(self):
         p = Popen(["ping", "-c1", "devicehub.net"])
         output = p.communicate()[0]
-        print(p.returncode)
+        if p.returncode == 0:
+            return True
+        else:
+            return False
 
     def supervisord(self):
         self.log("Starting supervisor loop")
