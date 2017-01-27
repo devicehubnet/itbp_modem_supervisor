@@ -140,7 +140,7 @@ class ITBPSupervisord(object):
                 sleep(1)
                 self.modem_power_on()
                 self.ppp_connect()
-            sleep(5)
+            sleep(100)
 
 
 if __name__ == "__main__":
