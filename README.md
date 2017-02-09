@@ -6,7 +6,9 @@
     pip install itbp-gprs
     
 ### Download and install 
-    ./setup.py install
+    sudo ./setup.py install
+    sudo apt install python-pip
+    sudo pip install -r requirements.txt
 
 ## TODO
  * Configure modem settings (serial port, baud) from itbp-gprs.ini
