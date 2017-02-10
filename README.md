@@ -7,7 +7,7 @@
     
 ### Download and install 
     sudo ./setup.py install
-    sudo apt install python-pip
+    sudo apt install python-pip ppp
     sudo pip install -r requirements.txt
 
 ## TODO
