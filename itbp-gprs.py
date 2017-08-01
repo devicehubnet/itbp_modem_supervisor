@@ -1,7 +1,54 @@
 #!/usr/bin/env python
 import os
 import sys
-import RPi.GPIO as GPIO
+try:
+     import RPi.GPIO as GPIO
+except ImportError:
+     class GPIO(object):
+          BOARD=0
+          IN="in"
+          OUT="out"
+          LOW=0
+          HIGH=1
+          WARNING=True
+          
+          def __init__(self):
+               pass
+               
+          @classmethod 
+          def setmode(cls, mode):
+               pass
+          @classmethod
+          def input(cls, pin):
+               return 1
+               
+          @classmethod  
+          def output(cls, pin, state):
+               gpio=160+pin
+               cmd = "echo {VAL} > /sys/class/gpio/gpio{GPIO}/value".format(VAL=state, GPIO=gpio)
+               print cmd
+               os.system(cmd)
+          
+          @classmethod
+          def setup(cls, pin, direction, initial=None):
+               gpio=160+pin
+               cmd = "echo {GPIO} >/sys/class/gpio/export".format(GPIO=gpio)
+               print cmd
+               os.system(cmd)
+               sleep(1)
+               cmd = "echo {DIR} > /sys/class/gpio/gpio{GPIO}/direction".format(DIR=direction, GPIO=gpio)
+               print cmd
+               os.system(cmd)
+          
+          @classmethod     
+          def cleanup(cls):
+               pass
+            
+          @classmethod   
+          def setwarnings(cls, enable):
+               cls.WARNING=enable
+               
+          
 from time import sleep
 import ConfigParser
 from subprocess import Popen
@@ -101,10 +148,12 @@ class ITBPSupervisord(object):
         GPIO.cleanup()  # free GPIO
 
     def ppp_connect(self):
-        os.system("pon {ISP}".format(ISP=self.ISP))
+        # os.system("pon {ISP}".format(ISP=self.ISP))
+        os.system("pppd call {ISP}".format(ISP=self.ISP))
 
     def ppp_disconnect(self):
-        os.system("poff {ISP}".format(ISP=self.ISP))
+        # os.system("poff {ISP}".format(ISP=self.ISP))
+        os.system("killall -9 pppd")
 
     def ppp_status(self):
         try:
@@ -117,7 +166,7 @@ class ITBPSupervisord(object):
         return False
 
     def net_status(self):
-        p = Popen(["ping", "-c1", "devicehub.net"])
+        p = Popen(["ping", "-c1", "openfleet.opendevlabs.com"])
         output = p.communicate()[0]
         if p.returncode == 0:
             self.log(output)
@@ -133,20 +182,20 @@ class ITBPSupervisord(object):
             net_state = self.net_status()
             print "PPP Status:", "UP" if ppp_state else "DOWN"
             print "NET Status:", "UP" if net_state else "DOWN"
-            if net_state is False and ppp_state is False:
+            if net_state is False:
                 print "Attempting to start PPP connection..."
                 self.ppp_disconnect()
                 self.modem_power_off()
                 sleep(1)
                 self.modem_power_on()
                 self.ppp_connect()
-            sleep(60 * 10)
+            sleep(60 * 2)
 
 
 if __name__ == "__main__":
     itbp_supervisord = ITBPSupervisord()
 
-    if len(sys.argv):
+    if len(sys.argv)>1:
         cmd = sys.argv[1]
         if cmd == "start":
             itbp_supervisord.modem_power_on()
