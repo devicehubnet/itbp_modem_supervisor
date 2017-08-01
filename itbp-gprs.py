@@ -11,27 +11,27 @@ except ImportError:
           LOW=0
           HIGH=1
           WARNING=True
-          
+
           def __init__(self):
                pass
-               
-          @classmethod 
+
+          @classmethod
           def setmode(cls, mode):
                pass
           @classmethod
           def input(cls, pin):
                return 1
-               
-          @classmethod  
+
+          @classmethod
           def output(cls, pin, state):
-               gpio=160+pin
+               gpio=pin
                cmd = "echo {VAL} > /sys/class/gpio/gpio{GPIO}/value".format(VAL=state, GPIO=gpio)
                print cmd
                os.system(cmd)
-          
+
           @classmethod
           def setup(cls, pin, direction, initial=None):
-               gpio=160+pin
+               gpio=pin
                cmd = "echo {GPIO} >/sys/class/gpio/export".format(GPIO=gpio)
                print cmd
                os.system(cmd)
@@ -39,16 +39,16 @@ except ImportError:
                cmd = "echo {DIR} > /sys/class/gpio/gpio{GPIO}/direction".format(DIR=direction, GPIO=gpio)
                print cmd
                os.system(cmd)
-          
-          @classmethod     
+
+          @classmethod
           def cleanup(cls):
                pass
-            
-          @classmethod   
+
+          @classmethod
           def setwarnings(cls, enable):
                cls.WARNING=enable
-               
-          
+
+
 from time import sleep
 import ConfigParser
 from subprocess import Popen
