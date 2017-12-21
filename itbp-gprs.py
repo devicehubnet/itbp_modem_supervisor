@@ -59,7 +59,7 @@ class ITBPSupervisord(object):
     PIN_RESET = 18
     PIN_STATUS = 12
 
-    INI_FILE = '/etc/itbp-gprs.ini'
+    INI_FILE = '/etc/devicehub/itbp-gprs.ini'
 
     APN = 'internet'
     ISP = 'isp'
