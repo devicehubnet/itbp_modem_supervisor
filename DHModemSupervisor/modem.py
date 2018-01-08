@@ -14,8 +14,11 @@ class Modem(object):
     TIMEOUT_POWER_ON = 8
     TIMEOUT_POWER_OFF_MAX = 100
 
-    def __init__(self):
-        self.modem_hw_control_setup(pin_power=16, pin_reset=18, pin_status=12)
+    def __init__(self, pin_power=16, pin_reset=18, pin_status=12):
+        self.PIN_POWER = pin_power
+        self.PIN_RESET = pin_reset
+        self.PIN_STATUS = pin_status
+        self.modem_hw_control_setup()
 
     def __del__(self):
         self.modem_hw_control_release()
