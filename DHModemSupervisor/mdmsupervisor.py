@@ -108,6 +108,7 @@ class ModemSupervisor(Machine):
             sleep(5)
             self.modem.power_on()
             self.ppp_connect()
+            sleep(30)
             if self.net_and_ppp_up():
                 self.connect()
             retry += 1
