@@ -52,6 +52,9 @@ class ModemSupervisor(Machine):
 
         self.setup_platform()
 
+    def log(self, args):
+        print("ITBPSupervisord:", args)
+
     def setup_platform(self):
         self.modem = Modem(self.PIN_POWER, self.PIN_RESET, self.PIN_STATUS)
 
