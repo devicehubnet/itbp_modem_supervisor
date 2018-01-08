@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import os
 import sys
 try:
@@ -54,7 +53,7 @@ import ConfigParser
 from subprocess import Popen
 
 
-class ITBPSupervisord(object):
+class Modem(object):
     PIN_POWER = 16
     PIN_RESET = 18
     PIN_STATUS = 12
@@ -192,26 +191,3 @@ class ITBPSupervisord(object):
             sleep(60 * 2)
 
 
-if __name__ == "__main__":
-    itbp_supervisord = ITBPSupervisord()
-
-    if len(sys.argv)>1:
-        cmd = sys.argv[1]
-        if cmd == "start":
-            itbp_supervisord.modem_power_on()
-            sleep(5)
-            itbp_supervisord.ppp_connect()
-            itbp_supervisord.supervisord()
-        elif cmd == "stop":
-            itbp_supervisord.ppp_disconnect()
-            itbp_supervisord.modem_power_off()
-        elif cmd == "poweron":
-            itbp_supervisord.modem_power_on()
-        elif cmd == "poweroff":
-            itbp_supervisord.modem_power_off()
-        elif cmd == "powercycle":
-            itbp_supervisord.modem_restart()
-        else:
-            print "itbp modem: Unknown command"
-    else:
-        itbp_supervisord.supervisord()
