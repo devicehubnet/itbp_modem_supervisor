@@ -21,7 +21,7 @@ class ModemSupervisor(Machine):
     PPP_CONNECTED = False
     NET_CONNECTED = False
 
-    states = ['internet_disconnected', 'internet_connected', 'modem_reset']
+    states = ['initial', 'internet_disconnected', 'internet_connected', 'modem_reset']
     modem = None
 
     def __init__(self):
@@ -52,6 +52,11 @@ class ModemSupervisor(Machine):
 
         self.setup_platform()
 
+        if self.net_status():
+            self.set_state('internet_connected')
+        else:
+            self.set_state('internet_disconnected')
+
     def log(self, args):
         print("ITBPSupervisord:", args)
 
@@ -59,12 +64,12 @@ class ModemSupervisor(Machine):
         self.modem = Modem(self.PIN_POWER, self.PIN_RESET, self.PIN_STATUS)
 
     def ppp_connect(self):
-        # os.system("pon {ISP}".format(ISP=self.ISP))
-        os.system("pppd call {ISP}".format(ISP=self.ISP))
+        os.system("pon {ISP}".format(ISP=self.ISP))
+        # os.system("pppd call {ISP}".format(ISP=self.ISP))
 
     def ppp_disconnect(self):
-        # os.system("poff {ISP}".format(ISP=self.ISP))
-        os.system("killall -9 pppd")
+        os.system("poff {ISP}".format(ISP=self.ISP))
+        # os.system("killall -9 pppd")
 
     def ppp_status(self):
         try:
@@ -103,5 +108,5 @@ class ModemSupervisor(Machine):
 
     def run(self):
         while True:
-            pass
+            sleep(5)
             # Update HW watchdog
