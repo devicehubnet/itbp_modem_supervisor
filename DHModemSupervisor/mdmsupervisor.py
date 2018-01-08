@@ -45,17 +45,13 @@ class ModemSupervisor(Machine):
             self.log("config file init EXC: " + str(e))
 
         Machine.__init__(self, states=self.states, initial='internet_disconnected')
-        self.add_transition('disconnecting', 'internet_connected', 'internet_disconnected')
-        self.add_transition('connecting', 'internet_disconnected', 'internet_connected')
+        self.add_transition('disconnect', 'internet_connected', 'internet_disconnected')
+        self.add_transition('reconnect', 'internet_connected', 'internet_disconnected')
+        self.add_transition('connect', 'internet_disconnected', 'internet_connected')
         self.add_transition('hw_reset', 'internet_disconnected', 'modem_reset')
         self.add_transition('finished_hw_reset', 'modem_reset', 'internet_disconnected')
 
         self.setup_platform()
-
-        if self.net_status():
-            self.set_state('internet_connected')
-        else:
-            self.set_state('internet_disconnected')
 
     def log(self, args):
         print("ITBPSupervisord:", args)
@@ -89,24 +85,40 @@ class ModemSupervisor(Machine):
         else:
             return False
 
-    def supervisord(self):
-        self.log("Starting supervisor loop")
+    def net_and_ppp_up(self):
+        if self.ppp_status() and self.net_status():
+            return True
+        else:
+            return False
+
+    def on_enter_internet_connected(self):
+        print("on_enter_internet_connected")
         while True:
-            # do we have ppp up?
-            ppp_state = self.ppp_status()
-            net_state = self.net_status()
-            print("PPP Status:", "UP" if ppp_state else "DOWN")
-            print("NET Status:", "UP" if net_state else "DOWN")
-            if net_state is False:
-                print("Attempting to start PPP connection...")
-                self.ppp_disconnect()
-                self.modem_power_off()
-                sleep(1)
-                self.modem_power_on()
-                self.ppp_connect()
-            sleep(60 * 2)
+            if self.net_and_ppp_up() is False:
+                self.reconnect()
+            sleep(5)
+
+    def on_enter_internet_disconnected(self):
+        print("on_enter_internet_disconnected")
+        retry = 0
+        max_retry = 5
+        while retry < max_retry:
+            print("Attempting to start PPP connection...")
+            self.ppp_disconnect()
+            self.power_off()
+            sleep(5)
+            self.power_on()
+            self.ppp_connect()
+            if self.net_and_ppp_up():
+                self.connect()
+            retry += 1
+
+    def on_enter_modem_reset(self):
+        print("on_enter_modem_reset")
+        self.modem.reset()
 
     def run(self):
-        while True:
-            sleep(5)
-            # Update HW watchdog
+        if self.net_status():
+            self.set_state('internet_connected')
+        else:
+            self.set_state('internet_disconnected')
