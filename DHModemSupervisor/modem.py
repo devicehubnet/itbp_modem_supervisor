@@ -21,7 +21,7 @@ class Modem(object):
         self.hw_control_setup()
 
     def __del__(self):
-        self.modem_hw_control_release()
+        self.hw_control_release()
 
     def log(self, args):
         print("ITBPSupervisord:", args)
@@ -30,20 +30,20 @@ class Modem(object):
         return GPIO.input(self.PIN_STATUS)
 
     def power_on(self):
-        if not self.modem_status():
+        if not self.status():
             self.log("try to wake h-nanoGSM")
             GPIO.output(self.PIN_POWER, GPIO.LOW)
             sleep(1)
             GPIO.output(self.PIN_POWER, GPIO.HIGH)
             sleep(5)
 
-        if self.modem_status():
+        if self.status():
             self.log("h-nanoGSM is up")
         else:
             self.log("failure powering on h-nanoGSM")
 
     def power_off(self):
-        if self.modem_status():
+        if self.status():
             delay = 0
             print("itbp modem: try to shutdown h-nanoGSM")
             GPIO.output(self.PIN_POWER, GPIO.LOW)
@@ -53,7 +53,7 @@ class Modem(object):
             sys.stdout.write("itbp modem: wait.")
             sys.stdout.flush()
 
-            while self.modem_status() and delay < self.TIMEOUT_POWER_OFF_MAX:
+            while self.status() and delay < self.TIMEOUT_POWER_OFF_MAX:
                sys.stdout.write(".")
                sys.stdout.flush()
                sleep(1)
@@ -61,7 +61,7 @@ class Modem(object):
 
             print("done")
 
-        if not self.modem_status():
+        if not self.status():
             print("itbp modem: h-nanoGSM is down")
         else:
             print("itbp modem: failure powering off h-nanoGSM")
