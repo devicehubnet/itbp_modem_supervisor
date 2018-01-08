@@ -12,7 +12,7 @@ class Modem(object):
     PIN_STATUS = 12
 
     TIMEOUT_POWER_ON = 8
-    TIMEOUT_POWER_OFF_MAX = 100
+    TIMEOUT_POWER_OFF_MAX = 30
 
     def __init__(self, pin_power=16, pin_reset=18, pin_status=12):
         self.PIN_POWER = pin_power
