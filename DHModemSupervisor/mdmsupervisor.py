@@ -104,17 +104,19 @@ class ModemSupervisor(Machine):
         while retry < max_retry:
             print("Attempting to start PPP connection...")
             self.ppp_disconnect()
-            self.power_off()
+            self.modem.power_off()
             sleep(5)
-            self.power_on()
+            self.modem.power_on()
             self.ppp_connect()
             if self.net_and_ppp_up():
                 self.connect()
             retry += 1
+        self.hw_reset()
 
     def on_enter_modem_reset(self):
         print("on_enter_modem_reset")
         self.modem.reset()
+        self.reconnect()
 
     def run(self):
         if self.net_status():
