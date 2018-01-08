@@ -46,7 +46,7 @@ class ModemSupervisor(Machine):
         Machine.__init__(self, states=self.states, initial='initial')
         self.add_transition('disconnect', 'internet_connected', 'internet_disconnected')
         self.add_transition('reconnect', ['initial', 'internet_connected'], 'internet_disconnected')
-        self.add_transition('connect', 'internet_disconnected', 'internet_connected')
+        self.add_transition('connect', ['initial', 'internet_disconnected'], 'internet_connected')
         self.add_transition('hw_reset', 'internet_disconnected', 'modem_reset')
         self.add_transition('finished_hw_reset', 'modem_reset', 'internet_disconnected')
 
