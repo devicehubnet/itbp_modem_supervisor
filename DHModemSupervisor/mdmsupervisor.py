@@ -39,6 +39,7 @@ class ModemSupervisor(Machine):
             self.ISP = config.get('Connection', 'isp')
             self.AUTO_CONNECT = config.getboolean('Connection', 'auto_connect')
 
+            self.log("PWR PIN: {PIN}".format(PIN=self.PIN_POWER))
             self.log("ISP: " + self.ISP)
             self.log("APN: " + self.APN)
             self.log("AUTO_CONNECT: " + str(self.AUTO_CONNECT))
