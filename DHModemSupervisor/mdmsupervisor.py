@@ -119,6 +119,6 @@ class ModemSupervisor(Machine):
 
     def run(self):
         if self.net_status():
-            self.set_state('internet_connected')
+            self.connect()
         else:
-            self.set_state('internet_disconnected')
+            self.reconnect()
