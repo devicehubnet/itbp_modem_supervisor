@@ -47,7 +47,7 @@ class Modem(object):
             delay = 0
             print("itbp modem: try to shutdown h-nanoGSM")
             GPIO.output(self.PIN_POWER, GPIO.LOW)
-            sleep(1)
+            sleep(2)
             GPIO.output(self.PIN_POWER, GPIO.HIGH)
 
             sys.stdout.write("itbp modem: wait.")
@@ -63,8 +63,10 @@ class Modem(object):
 
         if not self.status():
             print("itbp modem: h-nanoGSM is down")
+            return True
         else:
             print("itbp modem: failure powering off h-nanoGSM")
+            return False
 
     def reset(self):
         self.power_off()

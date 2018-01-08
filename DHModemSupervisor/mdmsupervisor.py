@@ -81,7 +81,6 @@ class ModemSupervisor(Machine):
         p = Popen(["ping", "-c1", "mail.google.com"])
         output = p.communicate()[0]
         if p.returncode == 0:
-            self.log('net_status: ' + output)
             return True
         else:
             return False
