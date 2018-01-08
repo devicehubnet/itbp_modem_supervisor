@@ -70,9 +70,11 @@ class ModemSupervisor(Machine):
         try:
             for line in os.popen("/sbin/ip link show "):
                 if 'ppp' in line:
+                    print("ppp on")
                     return True
         except Exception as e:
             self.log(e)
+        print("ppp off")
         return False
 
     def net_status(self):
