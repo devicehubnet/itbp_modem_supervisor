@@ -53,7 +53,7 @@ class ModemSupervisor(Machine):
         self.setup_platform()
 
     def log(self, args):
-        print("ITBPSupervisord:", args)
+        print("ModemSupervisor:", args)
 
     def setup_platform(self):
         self.modem = Modem(self.PIN_POWER, self.PIN_RESET, self.PIN_STATUS)
@@ -81,7 +81,7 @@ class ModemSupervisor(Machine):
         p = Popen(["ping", "-c1", "mail.google.com"])
         output = p.communicate()[0]
         if p.returncode == 0:
-            self.log(output)
+            self.log('net_status: ' + output)
             return True
         else:
             return False
