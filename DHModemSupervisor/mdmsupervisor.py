@@ -11,6 +11,8 @@ class ModemSupervisor(Machine):
     PIN_RESET = 18
     PIN_STATUS = 12
 
+    NET_CHECK_INTERVAL = 5
+
     INI_FILE = '/etc/devicehub/itbp-gprs.ini'
 
     APN = 'internet'
@@ -96,7 +98,7 @@ class ModemSupervisor(Machine):
         while True:
             if self.net_and_ppp_up() is False:
                 self.reconnect()
-            sleep(5)
+            sleep(self.NET_CHECK_INTERVAL)
 
     def on_enter_internet_disconnected(self):
         print("on_enter_internet_disconnected")
