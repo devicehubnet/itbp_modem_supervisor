@@ -34,7 +34,6 @@ class ModemSupervisor(Machine):
             self.PIN_RESET  = config.getint('Modem', 'gpio_reset')
             self.PIN_STATUS = config.getint('Modem', 'gpio_status')
 
-            # self.APN = config.get('Connection', 'apn', )
             self.ISP = config.get('Connection', 'isp')
             self.AUTO_CONNECT = config.getboolean('Connection', 'auto_connect')
 
@@ -46,7 +45,7 @@ class ModemSupervisor(Machine):
 
         Machine.__init__(self, states=self.states, initial='internet_disconnected')
         self.add_transition('disconnect', 'internet_connected', 'internet_disconnected')
-        self.add_transition('reconnect', 'internet_connected', 'internet_disconnected')
+        self.add_transition('reconnect', ['initial', 'internet_connected'], 'internet_disconnected')
         self.add_transition('connect', 'internet_disconnected', 'internet_connected')
         self.add_transition('hw_reset', 'internet_disconnected', 'modem_reset')
         self.add_transition('finished_hw_reset', 'modem_reset', 'internet_disconnected')
