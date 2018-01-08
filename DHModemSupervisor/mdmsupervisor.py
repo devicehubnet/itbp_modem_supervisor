@@ -43,7 +43,7 @@ class ModemSupervisor(Machine):
         except Exception as e:
             self.log("config file init EXC: " + str(e))
 
-        Machine.__init__(self, states=self.states, initial='internet_disconnected')
+        Machine.__init__(self, states=self.states, initial='initial')
         self.add_transition('disconnect', 'internet_connected', 'internet_disconnected')
         self.add_transition('reconnect', ['initial', 'internet_connected'], 'internet_disconnected')
         self.add_transition('connect', 'internet_disconnected', 'internet_connected')
