@@ -30,18 +30,15 @@ class GPIO(object):
     def output(cls, pin, state):
         gpio = pin
         cmd = "echo {VAL} > /sys/class/gpio/gpio{GPIO}/value".format(VAL=state, GPIO=gpio)
-        print cmd
         os.system(cmd)
 
     @classmethod
     def setup(cls, pin, direction, initial=None):
         gpio = pin
         cmd = "echo {GPIO} >/sys/class/gpio/export".format(GPIO=gpio)
-        print cmd
         os.system(cmd)
         sleep(1)
         cmd = "echo {DIR} > /sys/class/gpio/gpio{GPIO}/direction".format(DIR=direction, GPIO=gpio)
-        print cmd
         os.system(cmd)
 
     @classmethod

@@ -70,11 +70,10 @@ class ModemSupervisor(Machine):
                     return True
         except Exception as e:
             self.log(e)
-
         return False
 
     def net_status(self):
-        p = Popen(["ping", "-c1", "openfleet.opendevlabs.com"])
+        p = Popen(["ping", "-c1", "mail.google.com"])
         output = p.communicate()[0]
         if p.returncode == 0:
             self.log(output)
@@ -88,10 +87,10 @@ class ModemSupervisor(Machine):
             # do we have ppp up?
             ppp_state = self.ppp_status()
             net_state = self.net_status()
-            print "PPP Status:", "UP" if ppp_state else "DOWN"
-            print "NET Status:", "UP" if net_state else "DOWN"
+            print("PPP Status:", "UP" if ppp_state else "DOWN")
+            print("NET Status:", "UP" if net_state else "DOWN")
             if net_state is False:
-                print "Attempting to start PPP connection..."
+                print("Attempting to start PPP connection...")
                 self.ppp_disconnect()
                 self.modem_power_off()
                 sleep(1)

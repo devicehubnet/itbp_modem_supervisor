@@ -21,7 +21,7 @@ class Modem(object):
         self.modem_hw_control_release()
 
     def log(self, args):
-        print "ITBPSupervisord:", args
+        print("ITBPSupervisord:", args)
 
     def modem_status(self):
         return GPIO.input(self.PIN_STATUS)
@@ -56,7 +56,7 @@ class Modem(object):
                sleep(1)
                delay += 1
 
-            print "done"
+            print("done")
 
         if not self.modem_status():
             print("itbp modem: h-nanoGSM is down")
@@ -75,7 +75,7 @@ class Modem(object):
             GPIO.setup(self.PIN_STATUS, GPIO.IN)
             GPIO.setup(self.PIN_POWER, GPIO.OUT, initial=GPIO.HIGH)
         except Exception as e:
-            print str(e)
+            print(str(e))
             GPIO.cleanup()  # free GPIO
             GPIO.setup(self.PIN_STATUS, GPIO.IN)
             GPIO.setup(self.PIN_POWER, GPIO.OUT, initial=GPIO.HIGH)
