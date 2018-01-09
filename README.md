@@ -13,15 +13,15 @@ This software will monitor the internet connection and perform modem hardware re
     sudo pip install -r requirements.txt
 
 ## TODO
- * Configure modem settings (serial port, baud) from dhmsupervisord.ini
- * Configure APN setting directly from dhmsupervisord.ini
- * Stop GPRS connection if wlan or ethernet is functional
- * Create deb package for installation using apt
+  * Configure modem settings (serial port, baud) from dhmsupervisord.ini
+  * Configure APN setting directly from dhmsupervisord.ini
+  * Stop GPRS connection if wlan or ethernet is functional
+  * Create deb package for installation using apt
 
 ## Platforms
 
 This software was tested on the following hardware platforms:
 
- * RaspberryPi
- * BeagleBone Black
- * FriendlyArm mini2440
+  * RaspberryPi (you need to have RPi.GPIO installed)
+  * BeagleBone Black
+  * FriendlyArm mini2440
