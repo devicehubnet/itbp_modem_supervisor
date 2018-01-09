@@ -11,7 +11,7 @@ class ModemSupervisor(Machine):
     PIN_RESET = 18
     PIN_STATUS = 12
 
-    NET_CHECK_INTERVAL = 5
+    NET_CHECK_INTERVAL = 30
 
     INI_FILE = '/etc/devicehub/itbp-gprs.ini'
 
@@ -63,16 +63,16 @@ class ModemSupervisor(Machine):
 
     def ppp_connect(self):
         os.system("pon {ISP}".format(ISP=self.ISP))
-        # os.system("pppd call {ISP}".format(ISP=self.ISP))
 
     def ppp_disconnect(self):
         os.system("poff {ISP}".format(ISP=self.ISP))
-        # os.system("killall -9 pppd")
+        sleep(1)
+        os.system("killall -9 pppd")
 
-    def ppp_status(self):
+    def intf_status(self, intf):
         try:
             for line in os.popen("/sbin/ip link show "):
-                if 'ppp' in line:
+                if intf in line:
                     print("ppp on")
                     return True
         except Exception as e:
@@ -89,20 +89,26 @@ class ModemSupervisor(Machine):
             return False
 
     def net_and_ppp_up(self):
-        if self.ppp_status() and self.net_status():
+        if self.intf_status('ppp') and self.net_status():
             return True
         else:
             return False
 
     def on_enter_internet_connected(self):
         print("on_enter_internet_connected")
+        os.system("systemctl start openvpn")
         while True:
-            if self.net_and_ppp_up() is False:
+            if not self.net_and_ppp_up():
                 self.reconnect()
+
+            if not self.intf_status('tun'):
+                os.system("systemctl restart openvpn")
+
             sleep(self.NET_CHECK_INTERVAL)
 
     def on_enter_internet_disconnected(self):
         print("on_enter_internet_disconnected")
+        os.system("systemctl stop openvpn")
         retry = 0
         max_retry = 5
         while retry < max_retry:
