@@ -12,7 +12,7 @@ class ModemSupervisor(object):
 
     NET_CHECK_INTERVAL = 30
 
-    INI_FILE = '/etc/devicehub/itbp-gprs.ini'
+    INI_FILE = '/etc/devicehub/dhmsupervisord.ini'
 
     APN = 'internet'
     ISP = 'isp'
