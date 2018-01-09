@@ -11,6 +11,7 @@ class ModemSupervisor(object):
     PIN_STATUS = 12
 
     NET_CHECK_INTERVAL = 30
+    NET_TIMEOUT_INTERVAL = 5
 
     INI_FILE = '/etc/devicehub/dhmsupervisord.ini'
 
@@ -56,9 +57,10 @@ class ModemSupervisor(object):
         os.system("pon {ISP}".format(ISP=self.ISP))
 
     def ppp_disconnect(self):
-        os.system("poff {ISP}".format(ISP=self.ISP))
-        sleep(1)
-        os.system("kill -9 `pidof pppd`")
+        if self.intf_status('ppp'):
+            os.system("poff {ISP}".format(ISP=self.ISP))
+            sleep(1)
+            os.system("kill -9 `pidof pppd`")
 
     def intf_status(self, intf):
         try:
@@ -72,7 +74,7 @@ class ModemSupervisor(object):
         return False
 
     def net_status(self):
-        p = Popen(["ping", "-c1", "mail.google.com"])
+        p = Popen(["ping", "-c1", "-t{TMT}".format(TMT=self.NET_TIMEOUT_INTERVAL), "8.8.8.8"])
         output = p.communicate()[0]
         if p.returncode == 0:
             print("INTERNET CONNECTION IS UP")
