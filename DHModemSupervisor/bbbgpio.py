@@ -35,10 +35,10 @@ class GPIO(object):
     @classmethod
     def setup(cls, pin, direction, initial=None):
         gpio = pin
-        cmd = "echo {GPIO} >/sys/class/gpio/export".format(GPIO=gpio)
+        cmd = "echo {GPIO} >/sys/class/gpio/export > /dev/null 2>&1".format(GPIO=gpio)
         os.system(cmd)
         sleep(1)
-        cmd = "echo {DIR} > /sys/class/gpio/gpio{GPIO}/direction".format(DIR=direction, GPIO=gpio)
+        cmd = "echo {DIR} > /sys/class/gpio/gpio{GPIO}/direction > /dev/null 2>&1".format(DIR=direction, GPIO=gpio)
         os.system(cmd)
 
     @classmethod
