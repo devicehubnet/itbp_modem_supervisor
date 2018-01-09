@@ -62,7 +62,7 @@ class ModemSupervisor(object):
 
     def intf_status(self, intf):
         try:
-            for line in os.popen("/sbin/ip link show "):
+            for line in os.popen("/sbin/ip link show"):
                 if intf in line:
                     print("ppp on")
                     return True
@@ -85,20 +85,6 @@ class ModemSupervisor(object):
         else:
             return False
 
-    def internet_connected(self):
-        print("on_enter_internet_connected")
-        os.system("systemctl start openvpn")
-        while True:
-            if not self.net_and_ppp_up():
-                self.reconnect()
-
-            sleep(10)
-            
-            if not self.intf_status('tun'):
-                os.system("systemctl restart openvpn")
-
-            sleep(self.NET_CHECK_INTERVAL)
-
     def internet_disconnected(self):
         print("on_enter_internet_disconnected")
         os.system("systemctl stop openvpn")
@@ -107,18 +93,21 @@ class ModemSupervisor(object):
         while retry < max_retry:
             print("Attempting to start PPP connection...")
             self.ppp_disconnect()
-            self.modem.power_off()
-            sleep(5)
-            self.modem.power_on()
+            self.modem.reset()
             self.ppp_connect()
             sleep(30)
             if self.net_and_ppp_up():
-                self.connect()
+                return
             retry += 1
-        self.modem.reset()
 
     def run(self):
-        if self.net_status():
-            self.internet_connected()
-        else:
-            self.internet_disconnected()
+        while True:
+            if self.net_and_ppp_up():
+                sleep(10)
+                if not self.intf_status('tun'):
+                    os.system("systemctl restart openvpn")
+            else:
+                self.internet_disconnected()
+            sleep(self.NET_CHECK_INTERVAL)
+
+

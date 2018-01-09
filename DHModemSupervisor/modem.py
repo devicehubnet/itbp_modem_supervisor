@@ -70,7 +70,7 @@ class Modem(object):
 
     def reset(self):
         self.power_off()
-        sleep(3)
+        sleep(5)
         self.power_on()
 
     def hw_control_setup(self):
