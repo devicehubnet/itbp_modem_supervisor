@@ -1,4 +1,3 @@
-from transitions import Machine
 from .modem import Modem
 from time import sleep
 import ConfigParser
@@ -6,7 +5,7 @@ import os
 from subprocess import Popen
 
 
-class ModemSupervisor(Machine):
+class ModemSupervisor(object):
     PIN_POWER = 16
     PIN_RESET = 18
     PIN_STATUS = 12
@@ -23,7 +22,6 @@ class ModemSupervisor(Machine):
     PPP_CONNECTED = False
     NET_CONNECTED = False
 
-    states = ['initial', 'internet_disconnected', 'internet_connected', 'modem_reset']
     modem = None
 
     def __init__(self):
@@ -45,13 +43,6 @@ class ModemSupervisor(Machine):
             self.log("AUTO_CONNECT: " + str(self.AUTO_CONNECT))
         except Exception as e:
             self.log("config file init EXC: " + str(e))
-
-        Machine.__init__(self, states=self.states, initial='initial')
-        self.add_transition('disconnect', 'internet_connected', 'internet_disconnected')
-        self.add_transition('reconnect', ['initial', 'internet_connected'], 'internet_disconnected')
-        self.add_transition('connect', ['initial', 'internet_disconnected'], 'internet_connected')
-        self.add_transition('hw_reset', 'internet_disconnected', 'modem_reset')
-        self.add_transition('finished_hw_reset', 'modem_reset', 'internet_disconnected')
 
         self.setup_platform()
 
@@ -94,19 +85,21 @@ class ModemSupervisor(Machine):
         else:
             return False
 
-    def on_enter_internet_connected(self):
+    def internet_connected(self):
         print("on_enter_internet_connected")
         os.system("systemctl start openvpn")
         while True:
             if not self.net_and_ppp_up():
                 self.reconnect()
 
+            sleep(10)
+            
             if not self.intf_status('tun'):
                 os.system("systemctl restart openvpn")
 
             sleep(self.NET_CHECK_INTERVAL)
 
-    def on_enter_internet_disconnected(self):
+    def internet_disconnected(self):
         print("on_enter_internet_disconnected")
         os.system("systemctl stop openvpn")
         retry = 0
@@ -122,15 +115,10 @@ class ModemSupervisor(Machine):
             if self.net_and_ppp_up():
                 self.connect()
             retry += 1
-        self.hw_reset()
-
-    def on_enter_modem_reset(self):
-        print("on_enter_modem_reset")
         self.modem.reset()
-        self.reconnect()
 
     def run(self):
         if self.net_status():
-            self.connect()
+            self.internet_connected()
         else:
-            self.reconnect()
+            self.internet_disconnected()
