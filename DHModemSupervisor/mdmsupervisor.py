@@ -75,8 +75,10 @@ class ModemSupervisor(object):
         p = Popen(["ping", "-c1", "mail.google.com"])
         output = p.communicate()[0]
         if p.returncode == 0:
+            print("INTERNET CONNECTION IS UP")
             return True
         else:
+            print("INTERNET CONNECTION IS DOWN")
             return False
 
     def net_and_ppp_up(self):
