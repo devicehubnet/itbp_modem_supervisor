@@ -58,7 +58,7 @@ class ModemSupervisor(object):
     def ppp_disconnect(self):
         os.system("poff {ISP}".format(ISP=self.ISP))
         sleep(1)
-        os.system("killall -9 pppd")
+        os.system("kill -9 `pidof pppd`")
 
     def intf_status(self, intf):
         try:
