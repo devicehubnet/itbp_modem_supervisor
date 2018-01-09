@@ -64,11 +64,11 @@ class ModemSupervisor(object):
         try:
             for line in os.popen("/sbin/ip link show"):
                 if intf in line:
-                    print("INTERFACE: {INTF} UP".format(intf))
+                    print("INTERFACE: {INTF} UP".format(INTF=intf))
                     return True
         except Exception as e:
             self.log(e)
-        print("INTERFACE: {INTF} DOWN".format(intf))
+        print("INTERFACE: {INTF} DOWN".format(INTF=intf))
         return False
 
     def net_status(self):
