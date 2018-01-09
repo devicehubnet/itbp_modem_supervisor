@@ -41,6 +41,9 @@ class GPIO(object):
         cmd = "echo {DIR} > /sys/class/gpio/gpio{GPIO}/direction > /dev/null 2>&1".format(DIR=direction, GPIO=gpio)
         os.system(cmd)
 
+        if initial:
+            cls.output(pin, initial)
+
     @classmethod
     def cleanup(cls):
         pass
