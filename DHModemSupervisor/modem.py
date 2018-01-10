@@ -29,11 +29,11 @@ class Modem(object):
     def status(self):
         return GPIO.input(self.PIN_STATUS)
 
-    def power_btn_push(self):
+    def power_btn_push(self, interval=2):
         GPIO.output(self.PIN_POWER, GPIO.HIGH)
         sleep(2)
         GPIO.output(self.PIN_POWER, GPIO.LOW)
-        sleep(2)
+        sleep(interval)
         GPIO.output(self.PIN_POWER, GPIO.HIGH)
         sleep(2)
 
@@ -51,7 +51,7 @@ class Modem(object):
         if self.status():
             delay = 0
             self.log("ATTEMPT TO POWER OFF MODEM")
-            self.power_btn_push()
+            self.power_btn_push(1)
             sys.stdout.write("MODEM: wait.")
             sys.stdout.flush()
 
