@@ -74,7 +74,7 @@ class ModemSupervisor(object):
         return False
 
     def net_status(self):
-        p = Popen(["ping", "-c1", "-W{TMT}".format(TMT=self.NET_TIMEOUT_INTERVAL), "8.8.8.8"])
+        p = Popen(["ping", "-zw1", "google.com", "443"])
         output = p.communicate()[0]
         if p.returncode == 0:
             print("INTERNET CONNECTION IS UP")
