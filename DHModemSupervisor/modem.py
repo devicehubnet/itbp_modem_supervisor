@@ -24,33 +24,35 @@ class Modem(object):
         self.hw_control_release()
 
     def log(self, args):
-        print("ITBPSupervisord:", args)
+        print("MODEM: {args}".format(args))
 
     def status(self):
         return GPIO.input(self.PIN_STATUS)
 
+    def power_btn_push(self):
+        GPIO.output(self.PIN_POWER, GPIO.HIGH)
+        sleep(2)
+        GPIO.output(self.PIN_POWER, GPIO.LOW)
+        sleep(2)
+        GPIO.output(self.PIN_POWER, GPIO.HIGH)
+        sleep(2)
+
     def power_on(self):
         if not self.status():
             self.log("try to wake h-nanoGSM")
-            GPIO.output(self.PIN_POWER, GPIO.LOW)
-            sleep(1)
-            GPIO.output(self.PIN_POWER, GPIO.HIGH)
-            sleep(5)
+            self.power_btn_push()
 
         if self.status():
-            self.log("h-nanoGSM is up")
+            self.log("ON")
         else:
-            self.log("failure powering on h-nanoGSM")
+            self.log("FAILURE POWERING ON")
 
     def power_off(self):
         if self.status():
             delay = 0
             print("itbp modem: try to shutdown h-nanoGSM")
-            GPIO.output(self.PIN_POWER, GPIO.LOW)
-            sleep(2)
-            GPIO.output(self.PIN_POWER, GPIO.HIGH)
-
-            sys.stdout.write("itbp modem: wait.")
+            self.power_btn_push()
+            sys.stdout.write("MODEM: wait.")
             sys.stdout.flush()
 
             while self.status() and delay < self.TIMEOUT_POWER_OFF_MAX:
@@ -62,10 +64,10 @@ class Modem(object):
             print("done")
 
         if not self.status():
-            print("itbp modem: h-nanoGSM is down")
+            self.log("OFF")
             return True
         else:
-            print("itbp modem: failure powering off h-nanoGSM")
+            self.log("FAILURE POWERING OFF")
             return False
 
     def reset(self):
