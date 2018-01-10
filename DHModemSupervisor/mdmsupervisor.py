@@ -55,13 +55,13 @@ class ModemSupervisor(object):
 
     def ppp_connect(self):
         os.system("killall -9 pppd")
-        os.system("pon {ISP}".format(ISP=self.ISP))
+        sleep(1)
+        os.system("pppd call {ISP}".format(ISP=self.ISP))
 
     def ppp_disconnect(self):
         if self.intf_status('ppp'):
-            os.system("poff {ISP}".format(ISP=self.ISP))
-            sleep(1)
             os.system("killall -9 pppd")
+            sleep(1)
 
     def intf_status(self, intf):
         try:
