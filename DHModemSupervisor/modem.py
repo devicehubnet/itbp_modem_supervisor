@@ -24,7 +24,7 @@ class Modem(object):
         self.hw_control_release()
 
     def log(self, args):
-        print("MODEM: {args}".format(args))
+        print("MODEM: {ARGS}".format(ARGS=args))
 
     def status(self):
         return GPIO.input(self.PIN_STATUS)
