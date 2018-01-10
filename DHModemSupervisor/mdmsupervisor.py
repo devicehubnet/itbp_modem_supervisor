@@ -60,7 +60,7 @@ class ModemSupervisor(object):
         if self.intf_status('ppp'):
             os.system("poff {ISP}".format(ISP=self.ISP))
             sleep(1)
-            os.system("kill -9 `pidof pppd`")
+            os.system("killall -9 pppd")
 
     def intf_status(self, intf):
         try:
