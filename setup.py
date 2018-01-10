@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(name='DeviceHub Modem Supervisor',
       version='0.3',
-      description='DeviceHub.net modem supervisor daemon',
+      description='DEVICEHUB modem supervisor daemon',
       author='Ionut Cotoi',
       author_email='ionut@devicehub.net',
       url='https://github.com/devicehubnet/itbp_modem_supervisor',

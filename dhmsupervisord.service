@@ -1,5 +1,5 @@
 [Unit]
-Description=itbrainpower.net modem supervisor script
+Description=DEVICEHUB modem supervisor daemon
 After=syslog.target
 
 [Service]
