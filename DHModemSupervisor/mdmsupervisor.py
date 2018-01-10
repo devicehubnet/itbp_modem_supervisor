@@ -90,7 +90,7 @@ class ModemSupervisor(object):
             return False
 
     def internet_disconnected(self):
-        print("on_enter_internet_disconnected")
+        print("internet_disconnected")
         os.system("systemctl stop openvpn")
         retry = 0
         max_retry = 5

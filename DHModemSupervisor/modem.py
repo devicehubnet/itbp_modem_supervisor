@@ -74,6 +74,7 @@ class Modem(object):
         self.power_off()
         sleep(5)
         self.power_on()
+        sleep(5)  # Wait for modem to register in the network
 
     def hw_control_setup(self):
         GPIO.setmode(GPIO.BOARD)
