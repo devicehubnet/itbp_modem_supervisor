@@ -50,7 +50,7 @@ class Modem(object):
     def power_off(self):
         if self.status():
             delay = 0
-            print("itbp modem: try to shutdown h-nanoGSM")
+            self.log("ATTEMPT TO POWER OFF MODEM")
             self.power_btn_push()
             sys.stdout.write("MODEM: wait.")
             sys.stdout.flush()
