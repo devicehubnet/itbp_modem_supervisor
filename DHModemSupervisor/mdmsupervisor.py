@@ -98,6 +98,7 @@ class ModemSupervisor(object):
             print("Attempting to start PPP connection...")
             self.ppp_disconnect()
             self.modem.reset()
+            sleep(30*retry)
             self.ppp_connect()
             sleep(30)
             if self.net_and_ppp_up():

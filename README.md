@@ -11,6 +11,10 @@ This software will monitor the internet connection and perform modem hardware re
     sudo ./setup.py install
     sudo apt install python-pip ppp
     sudo pip install -r requirements.txt
+    
+### Important notes
+    remove connman - apt remove connman
+    install psmisc - apt install psmisc
 
 ## TODO
   * Configure modem settings (serial port, baud) from dhmsupervisord.ini
