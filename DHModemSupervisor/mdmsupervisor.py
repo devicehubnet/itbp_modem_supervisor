@@ -54,6 +54,7 @@ class ModemSupervisor(object):
         self.modem = Modem(self.PIN_POWER, self.PIN_RESET, self.PIN_STATUS)
 
     def ppp_connect(self):
+        os.system("killall -9 pppd")
         os.system("pon {ISP}".format(ISP=self.ISP))
 
     def ppp_disconnect(self):
