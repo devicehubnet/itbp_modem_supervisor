@@ -10,8 +10,8 @@ class ModemSupervisor(object):
     PIN_RESET = 18
     PIN_STATUS = 12
 
-    NET_CHECK_INTERVAL = 30
-    NET_TIMEOUT_INTERVAL = 5
+    NET_CHECK_INTERVAL = 60
+    NET_TIMEOUT_INTERVAL = 10
 
     INI_FILE = '/etc/devicehub/dhmsupervisord.ini'
 
