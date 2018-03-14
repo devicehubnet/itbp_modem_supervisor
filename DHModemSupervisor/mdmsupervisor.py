@@ -112,6 +112,7 @@ class ModemSupervisor(object):
                 sleep(10)
                 if not self.intf_status('tun'):
                     os.system("systemctl restart openvpn")
+                    sleep(60)
             else:
                 self.internet_disconnected()
             sleep(self.NET_CHECK_INTERVAL)
