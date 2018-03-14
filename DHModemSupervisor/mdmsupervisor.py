@@ -49,7 +49,7 @@ class ModemSupervisor(object):
         self.setup_platform()
 
     def log(self, args):
-        syslog("ModemSupervisor:", args)
+        syslog("ModemSupervisor: " + args)
 
     def setup_platform(self):
         self.modem = Modem(self.PIN_POWER, self.PIN_RESET, self.PIN_STATUS)
