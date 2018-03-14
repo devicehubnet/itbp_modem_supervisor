@@ -1,17 +1,31 @@
-# itbrainpower.net modem supervisor & control script
+# GPRS/3G/4G modem supervisor & control script
+
+This software will monitor the internet connection and perform modem hardware reset using GPIO pins.
 
 ## Installation
 
 ### Using pip
-    pip install itbp-gprs
+    pip install DHModemSupervisor
     
 ### Download and install 
     sudo ./setup.py install
     sudo apt install python-pip ppp
     sudo pip install -r requirements.txt
+    
+### Important notes
+    remove connman - apt remove connman
+    install psmisc - apt install psmisc
 
 ## TODO
- * Configure modem settings (serial port, baud) from itbp-gprs.ini
- * Configure APN setting directly from itbp-gprs.ini
- * Stop GPRS connection if wlan or ethernet is functional
- * Create deb package for installation using apt
+  * Configure modem settings (serial port, baud) from dhmsupervisord.ini
+  * Configure APN setting directly from dhmsupervisord.ini
+  * Stop GPRS connection if wlan or ethernet is functional
+  * Create deb package for installation using apt
+
+## Platforms
+
+This software was tested on the following hardware platforms:
+
+  * RaspberryPi (you need to have RPi.GPIO installed)
+  * BeagleBone Black
+  * FriendlyArm mini2440

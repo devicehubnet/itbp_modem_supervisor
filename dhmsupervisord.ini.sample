@@ -1,11 +1,13 @@
+[Platform]
+type = bbb             ; Can be rpi or bbb
+
 [Modem]
 serial = /dev/serial0  ; Modem serial port
 baud = 115200          ; Modem speed
-gpio_power  = 16       ; Modem GPIO power pin
+gpio_power  = 44       ; Modem GPIO power pin
 gpio_reset  = 18       ; Modem GPIO reset pin
-gpio_status = 12       ; Modem GPIO status pin
+gpio_status = 45       ; Modem GPIO status pin
 
 [Connection]
-isp = orange-prepay    ; Peer file to be used by pppd
+isp = telekom          ; Peer file to be used by pppd
 auto_connect = true    ; Connect automaticaly at boot
-
