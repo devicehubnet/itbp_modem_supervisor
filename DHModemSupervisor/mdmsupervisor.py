@@ -3,6 +3,7 @@ from time import sleep
 import ConfigParser
 import os
 from subprocess import Popen
+from syslog import syslog
 
 
 class ModemSupervisor(object):
@@ -48,7 +49,7 @@ class ModemSupervisor(object):
         self.setup_platform()
 
     def log(self, args):
-        print("ModemSupervisor:", args)
+        syslog("ModemSupervisor: " + args)
 
     def setup_platform(self):
         self.modem = Modem(self.PIN_POWER, self.PIN_RESET, self.PIN_STATUS)
@@ -67,21 +68,21 @@ class ModemSupervisor(object):
         try:
             for line in os.popen("/sbin/ip link show"):
                 if intf in line:
-                    print("INTERFACE: {INTF} UP".format(INTF=intf))
+                    syslog("INTERFACE: {INTF} UP".format(INTF=intf))
                     return True
         except Exception as e:
             self.log(e)
-        print("INTERFACE: {INTF} DOWN".format(INTF=intf))
+        syslog("INTERFACE: {INTF} DOWN".format(INTF=intf))
         return False
 
     def net_status(self):
         p = Popen(["nc", "-zw1", "google.com", "443"])
         output = p.communicate()[0]
         if p.returncode == 0:
-            print("INTERNET CONNECTION IS UP")
+            syslog("INTERNET CONNECTION IS UP")
             return True
         else:
-            print("INTERNET CONNECTION IS DOWN")
+            syslog("INTERNET CONNECTION IS DOWN")
             return False
 
     def net_and_ppp_up(self):
@@ -91,12 +92,12 @@ class ModemSupervisor(object):
             return False
 
     def internet_disconnected(self):
-        print("internet_disconnected")
+        syslog("internet_disconnected")
         os.system("systemctl stop openvpn")
         retry = 0
         max_retry = 5
         while retry < max_retry:
-            print("Attempting to start PPP connection...")
+            syslog("Attempting to start PPP connection...")
             self.ppp_disconnect()
             self.modem.reset()
             sleep(30*retry)
@@ -111,7 +112,9 @@ class ModemSupervisor(object):
             if self.net_and_ppp_up():
                 sleep(10)
                 if not self.intf_status('tun'):
+                    syslog("OpenVPN is down, attempting openvpn restart...")
                     os.system("systemctl restart openvpn")
+                    sleep(60)
             else:
                 self.internet_disconnected()
             sleep(self.NET_CHECK_INTERVAL)
