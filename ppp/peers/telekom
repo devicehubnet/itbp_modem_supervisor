@@ -1,0 +1,20 @@
+connect '/usr/sbin/chat -v -f /etc/ppp/gprs -T broadband'
+/dev/ttyO1
+115200
+debug
+noauth
+noipdefault
+usepeerdns
+show-password
+defaultroute
+replacedefaultroute
+persist
+nocrtscts
+novj
+nobsdcomp
+novjccomp
+nopcomp
+noaccomp
+nodeflate
+local
+lock
