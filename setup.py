@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='DeviceHub Modem Supervisor',
-      version='0.4',
+      version='0.5',
       description='DEVICEHUB modem supervisor daemon',
       author='Ionut Cotoi',
       author_email='ionut@devicehub.net',
