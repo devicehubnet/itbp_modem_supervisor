@@ -13,7 +13,7 @@ class PostInstallCommand(install):
 
 
 setup(name='DeviceHub Modem Supervisor',
-      version='0.4',
+      version='0.6',
       description='DEVICEHUB modem supervisor daemon',
       author='Ionut Cotoi',
       author_email='ionut@devicehub.net',
