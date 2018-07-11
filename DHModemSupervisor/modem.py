@@ -4,9 +4,7 @@ try:
     import RPi.GPIO as GPIO
 except ImportError:
     from .bbbgpio import GPIO
-except ImportError:
-    from .mini2440_gpio import GPIO
-    
+
 
 class Modem(object):
     PIN_POWER = 16
@@ -85,7 +83,7 @@ class Modem(object):
             GPIO.setup(self.PIN_STATUS, GPIO.IN)
             GPIO.setup(self.PIN_POWER, GPIO.OUT, initial=GPIO.HIGH)
         except Exception as e:
-            print(str(e))
+            print("DHMSupervisord error setting up GPIOs:", str(e))
             GPIO.cleanup()  # free GPIO
             GPIO.setup(self.PIN_STATUS, GPIO.IN)
             GPIO.setup(self.PIN_POWER, GPIO.OUT, initial=GPIO.HIGH)
