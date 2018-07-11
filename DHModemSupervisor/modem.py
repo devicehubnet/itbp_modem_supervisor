@@ -4,7 +4,9 @@ try:
     import RPi.GPIO as GPIO
 except ImportError:
     from .bbbgpio import GPIO
-
+except ImportError:
+    from .mini2440_gpio import GPIO
+    
 
 class Modem(object):
     PIN_POWER = 16
