@@ -7,6 +7,7 @@ except ImportError:
 
 
 class Modem(object):
+    PIN_POWER_ENABLE = 49
     PIN_POWER = 16
     PIN_RESET = 18
     PIN_STATUS = 12
@@ -39,13 +40,26 @@ class Modem(object):
 
     def power_on(self):
         if not self.status():
-            self.log("try to wake h-nanoGSM")
-            self.power_btn_push()
+            delay = 0
+            self.log("ATTEMPT TO POWER ON MODEM")
+            self.power_btn_push(1)
+            sys.stdout.write("MODEM: wait.")
+            sys.stdout.flush()
+
+            while not self.status() and delay < self.TIMEOUT_POWER_ON:
+                sys.stdout.write(".")
+                sys.stdout.flush()
+                sleep(1)
+                delay += 1
+
+            print("done")
 
         if self.status():
             self.log("ON")
+            return True
         else:
             self.log("FAILURE POWERING ON")
+            return False
 
     def power_off(self):
         if self.status():
@@ -82,6 +96,7 @@ class Modem(object):
         try:
             GPIO.setup(self.PIN_STATUS, GPIO.IN)
             GPIO.setup(self.PIN_POWER, GPIO.OUT, initial=GPIO.HIGH)
+            GPIO.setup(self.PIN_POWER_ENABLE, GPIO.OUT, initial=GPIO.HIGH)
         except Exception as e:
             print("DHMSupervisord error setting up GPIOs:", str(e))
             GPIO.cleanup()  # free GPIO
