@@ -96,7 +96,7 @@ class Modem(object):
         try:
             GPIO.setup(self.PIN_STATUS, GPIO.IN)
             GPIO.setup(self.PIN_POWER, GPIO.OUT, initial=GPIO.HIGH)
-            GPIO.setup(self.PIN_POWER_ENABLE, GPIO.OUT, initial=GPIO.HIGH)
+            GPIO.setup(self.PIN_POWER_ENABLE, GPIO.OUT, initial=GPIO.LOW)
         except Exception as e:
             print("DHMSupervisord error setting up GPIOs:", str(e))
             GPIO.cleanup()  # free GPIO
