@@ -11,7 +11,7 @@ setup(name='DeviceHub Modem Supervisor',
       packages=['DHModemSupervisor'],
       install_requires=['RPi.GPIO'],
       scripts=['dhmsupervisord.py'],
-      data_files=[('/etc/systemd/system', ['dhmsupervisord.service']),
+      data_files=[('/lib/systemd/system', ['dhmsupervisord.service']),
                   ('/etc/devicehub', ['dhmsupervisord.ini.sample']),
                   ('/usr/local/bin', ['dhmsupervisord.py'])],
       )
