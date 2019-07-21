@@ -14,11 +14,11 @@ def enable_gsm_modem():
     GPIO.setup(MODEM_ONOFF, GPIO.OUT)
     GPIO.setup(MODEM_STATUS, GPIO.IN)
 
-    GPIO.output(MODEM_POWER, GPIO.HIGH)
+    GPIO.output(MODEM_POWER, GPIO.LOW)
     GPIO.output(MODEM_ONOFF, GPIO.HIGH)
     sleep(2)
     GPIO.output(MODEM_ONOFF, GPIO.LOW)
-    sleep(1.5)
+    sleep(1)
     GPIO.output(MODEM_ONOFF, GPIO.HIGH)
 
 
