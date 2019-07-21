@@ -10,6 +10,7 @@ class ModemSupervisor(object):
     PIN_POWER = 16
     PIN_RESET = 18
     PIN_STATUS = 12
+    PIN_ENABLE_POWER = 'P9_23'
 
     NET_CHECK_INTERVAL = 60
     NET_TIMEOUT_INTERVAL = 10
@@ -32,9 +33,10 @@ class ModemSupervisor(object):
             config = ConfigParser.ConfigParser()
             config.read(self.INI_FILE)
 
-            self.PIN_POWER  = config.getint('Modem', 'gpio_power')
-            self.PIN_RESET  = config.getint('Modem', 'gpio_reset')
-            self.PIN_STATUS = config.getint('Modem', 'gpio_status')
+            self.PIN_POWER  = config.get('Modem', 'gpio_power')
+            self.PIN_RESET  = config.get('Modem', 'gpio_reset')
+            self.PIN_STATUS = config.get('Modem', 'gpio_status')
+            self.PIN_ENABLE_POWER = config.get('Modem', 'gpio_enable')
 
             self.ISP = config.get('Connection', 'isp')
             self.AUTO_CONNECT = config.getboolean('Connection', 'auto_connect')
@@ -52,7 +54,7 @@ class ModemSupervisor(object):
         syslog("ModemSupervisor: " + args)
 
     def setup_platform(self):
-        self.modem = Modem(self.PIN_POWER, self.PIN_RESET, self.PIN_STATUS)
+        self.modem = Modem(self.PIN_POWER, self.PIN_RESET, self.PIN_STATUS, self.PIN_ENABLE_POWER)
 
     def ppp_connect(self):
         os.system("killall -9 pppd")

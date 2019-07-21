@@ -3,7 +3,7 @@ import sys
 try:
     import RPi.GPIO as GPIO
 except ImportError:
-    from .bbbgpio import GPIO
+    import Adafruit_BBIO.GPIO as GPIO
 
 
 class Modem(object):
@@ -15,10 +15,11 @@ class Modem(object):
     TIMEOUT_POWER_ON = 8
     TIMEOUT_POWER_OFF_MAX = 30
 
-    def __init__(self, pin_power=16, pin_reset=18, pin_status=12):
+    def __init__(self, pin_power=16, pin_reset=18, pin_status=12, pin_enable_power='P9_23'):
         self.PIN_POWER = pin_power
         self.PIN_RESET = pin_reset
         self.PIN_STATUS = pin_status
+        self.PIN_POWER_ENABLE = pin_enable_power
         self.hw_control_setup()
 
     def __del__(self):
@@ -39,6 +40,9 @@ class Modem(object):
         sleep(2)
 
     def power_on(self):
+        GPIO.output(self.PIN_POWER_ENABLE, GPIO.HIGH)
+        sleep(1)
+
         if not self.status():
             delay = 0
             self.log("ATTEMPT TO POWER ON MODEM")
@@ -76,6 +80,9 @@ class Modem(object):
                delay += 1
 
             print("done")
+
+        self.log("Disable power")
+        GPIO.output(self.PIN_POWER_ENABLE, GPIO.LOW)
 
         if not self.status():
             self.log("OFF")
