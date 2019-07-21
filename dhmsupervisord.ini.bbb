@@ -4,10 +4,10 @@ type = bbb             ; Can be rpi or bbb
 [Modem]
 serial = /dev/serial0  ; Modem serial port
 baud = 115200          ; Modem speed
-gpio_power  = 44       ; Modem GPIO on/off pin
-gpio_reset  = 18       ; Modem GPIO reset pin
-gpio_status = 45       ; Modem GPIO status pin
-gpio_enable = 49       ; Modem GPIO power enable pin (PSU)
+gpio_power  = P8_12    ; Modem GPIO on/off pin
+gpio_reset  = None     ; Modem GPIO reset pin
+gpio_status = P8_11    ; Modem GPIO status pin
+gpio_enable = P9_23    ; Modem GPIO power enable pin (PSU)
 
 [Connection]
 isp = telekom          ; Peer file to be used by pppd
