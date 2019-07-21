@@ -40,7 +40,7 @@ class Modem(object):
         sleep(2)
 
     def power_on(self):
-        GPIO.output(self.PIN_POWER_ENABLE, GPIO.HIGH)
+        GPIO.output(self.PIN_POWER_ENABLE, GPIO.LOW)
         sleep(1)
 
         if not self.status():
@@ -82,7 +82,7 @@ class Modem(object):
             print("done")
 
         self.log("Disable power")
-        GPIO.output(self.PIN_POWER_ENABLE, GPIO.LOW)
+        GPIO.output(self.PIN_POWER_ENABLE, GPIO.HIGH)
 
         if not self.status():
             self.log("OFF")
@@ -103,7 +103,7 @@ class Modem(object):
         try:
             GPIO.setup(self.PIN_STATUS, GPIO.IN)
             GPIO.setup(self.PIN_POWER, GPIO.OUT, initial=GPIO.HIGH)
-            GPIO.setup(self.PIN_POWER_ENABLE, GPIO.OUT, initial=GPIO.LOW)
+            GPIO.setup(self.PIN_POWER_ENABLE, GPIO.OUT, initial=GPIO.HIGH)
         except Exception as e:
             print("DHMSupervisord error setting up GPIOs:", str(e))
             GPIO.cleanup()  # free GPIO
